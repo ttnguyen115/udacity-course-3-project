@@ -2,99 +2,48 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-feed
+  labels:
+    app: api-feed
 spec:
+  replicas: 2
   selector:
     matchLabels:
-      run: api-feed
-  replicas: 2
+      app: api-feed
   template:
     metadata:
       labels:
-        run: api-feed
+        app: api-feed
     spec:
       containers:
-      - name: api-feed
-        image: docker.io/ttnguyen115/udagram-api-feed:v1
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 80
-        resources:
-          limits:
-            cpu: 500m
-          requests:
-            cpu: 300m
-            memory : "64Mi"
-        env:
-        - name: POSTGRES_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: env-secret
-              key: POSTGRES_USERNAME
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: env-secret
-              key: POSTGRES_PASSWORD
-        - name: POSTGRES_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: env-config
-              key: POSTGRES_HOST
-        - name: POSTGRES_DB
-          valueFrom:
-            configMapKeyRef:
-              name: env-config
-              key: POSTGRES_DB
-        - name: AWS_BUCKET
-          valueFrom:
-            configMapKeyRef:
-              name: env-config
-              key: AWS_BUCKET
-        - name: AWS_REGION
-          valueFrom:
-            configMapKeyRef:
-              name: env-config
-              key: AWS_REGION
-        - name: AWS_PROFILE
-          valueFrom:
-            configMapKeyRef:
-              name: env-config
-              key: AWS_PROFILE
-        - name: JWT_SECRET
-          valueFrom:
-            configMapKeyRef:
-              name: env-config
-              key: JWT_SECRET
-        - name: URL
-          valueFrom:
-            configMapKeyRef:
-              name: env-config
-              key: URL
-        - name: NODE_OPTIONS
-          valueFrom:
-            configMapKeyRef:
-              name: env-config
-              key: NODE_OPTIONS
-        volumeMounts:
-        - name: aws-secret
-          mountPath: "/root/.aws/"
-          readOnly: true
+        - name: api-feed
+          image: docker.io/ttnguyen115/udagram-api-feed:v2
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 250m
+            limits:
+              cpu: 500m
+          envFrom:
+            - secretRef:
+                name: env-secret
+            - secretRef:
+                name: aws-secret
+            - configMapRef:
+                name: config-secret
+          ports:
+            - containerPort: 8080
       restartPolicy: Always
-      volumes:
-      - name: aws-secret
-        secret:
-          secretName: aws-secret   
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    service: api-feed
   name: api-feed
+  labels:
+    app: api-feed
 spec:
   ports:
-  - name: "8080"
-    port: 8080
-    targetPort: 8080
+    - name: "8080"
+      port: 8080
+      targetPort: 8080
   selector:
-    service: api-feed
+    app: api-feed
