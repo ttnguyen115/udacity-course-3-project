@@ -3,13 +3,13 @@ node_js:
   - 14
 
 services:
- - docker
+  - docker
 
 install:
- - echo "nothing needs to be installed"
+  - echo "nothing needs to be installed"
 
 before_script:
- - echo "no tests. Yes there will be tests"
+  - echo "no tests. Yes there will be tests"
 
 script:
   ## Build
@@ -19,14 +19,14 @@ script:
   - docker build -t udagram-api-user ./udagram-api-user
   - docker build -t udagram-frontend ./udagram-frontend
   ## Tagging
-  - docker tag udagram-reverseproxy ttnguyen115/udagram-reverseproxy:v1
-  - docker tag udagram-api-feed ttnguyen115/udagram-api-feed:v1
-  - docker tag udagram-api-user ttnguyen115/udagram-api-user:v1
-  - docker tag udagram-frontend ttnguyen115/udagram-frontend:local
+  - docker tag udagram-reverseproxy ttnguyen115/udagram-reverseproxy:v2
+  - docker tag udagram-api-feed ttnguyen115/udagram-api-feed:v2
+  - docker tag udagram-api-user ttnguyen115/udagram-api-user:v2
+  - docker tag udagram-frontend ttnguyen115/udagram-frontend:v3
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker push ttnguyen115/udagram-reverseproxy:v1
-  - docker push ttnguyen115/udagram-api-feed:v1
-  - docker push ttnguyen115/udagram-api-user:v1
-  - docker push ttnguyen115/udagram-frontend:local
+  - docker push ttnguyen115/udagram-reverseproxy:v2
+  - docker push ttnguyen115/udagram-api-feed:v2
+  - docker push ttnguyen115/udagram-api-user:v2
+  - docker push ttnguyen115/udagram-frontend:v3
