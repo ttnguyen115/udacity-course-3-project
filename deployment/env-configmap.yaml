@@ -3,9 +3,9 @@ kind: ConfigMap
 metadata:
   name: config-secret
 data:
-  POSTGRES_HOST: my-170642206174-postgre-db.c5ez306ng57x.us-east-1.rds.amazonaws.com
-  POSTGRES_DB: postgre
-  AWS_BUCKET: my-170642206174-bucket
+  POSTGRES_HOST: postgres.cgk0qvqgacpv.us-east-1.rds.amazonaws.com
+  POSTGRES_DB: postgres
+  AWS_BUCKET: elasticbeanstalk-us-east-1-637835120083
   AWS_REGION: us-east-1
   AWS_PROFILE: default
   JWT_SECRET: testing
